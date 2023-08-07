@@ -1,12 +1,36 @@
 table {
   border: 1px solid black;
   margin: 40px 40px 40px 60px;
-  border-collapse: collapse;
+  border-collapse: separate;
+}
+
+table,
+#result,
+.num_btn,
+.op_btn,
+#equal,
+#back,
+#clear,
+#history_box button,
+#history_list {
+  border-radius: 5px;
 }
 
 th,
 td {
   padding: 5px;
+}
+
+.num_btn {
+  background-color: rgb(245, 240, 233);
+}
+.op_btn,
+#equal  {
+  background-color: rgb(236, 255, 255);
+}
+#back,
+#clear {
+  background-color: rgb(250, 215, 215) ;
 }
 
 .num_btn,
@@ -32,7 +56,6 @@ td {
 
 #container {
   position: relative;
-  
 }
 
 .flex {
@@ -59,9 +82,12 @@ td {
   line-height: 40px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: scroll;
+  overflow-y:auto
 }
+
 #history_box button {
+  border: 1px solid white;
+  color: white;
   margin-right: 40px;
   width: 80px;
   height: 30px;
@@ -70,7 +96,12 @@ td {
 #history_box {
   margin: 40px 40px 0 0 ;
 }
+
+#history_btn {
+  background-color: deepskyblue;
+}
 #history_reset {
+  background-color: orangered;
   display: none;
 }
 
