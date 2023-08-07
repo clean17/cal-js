@@ -7,12 +7,13 @@ import {
   changeOpBool,
   getPreNum,
   getNextNum,
-  getDelayTime,
+  wait,
   getNextNumLength,
   getOpBool,
   getOperation,
   afterCalState,
   stateClear,
+  lotateAnimation,
 } from './cal_module.js'
 
 import {
@@ -75,13 +76,12 @@ window.addEventListener("keydown", (event) => {
 });
 
 // 계산 트리거
-function calculate() {
+async function calculate() {
   const all_btn = document.querySelectorAll("button");
   btnBlock(all_btn, "none"); // 버튼 비활성화
   if (getNextNum() !== "") {
-    setTimeout(() => {
-      loadCal();
-    }, getDelayTime());
+    await wait();
+    loadCal();
   } else {
     btnBlock(all_btn, "auto"); // 버튼 활성화
   }
@@ -89,13 +89,10 @@ function calculate() {
 
 // 버튼 활성화 / 비활성화
 function btnBlock(btn, opt) {
-  // css - 계산중 표시하기
-  const loading = document.querySelector("#loading")
   btn.forEach((e) => {
-    e.style["pointer-events"] = opt;
+    e.style["pointer-events"] = opt; // "auto", "none" - 버튼
   });
-  // opt === "auto" ? loading.style["visibility"] = "hidden" : loading.style["visibility"] = "visible";
-  opt === "auto" ? loading.style["display"] = "none" : loading.style["display"] = "block";
+  lotateAnimation(opt);
 }
 
 // 계산 함수 호출
@@ -103,8 +100,8 @@ function loadCal() {
   const result = document.querySelector("#result");
   const all_btn = document.querySelectorAll("button");
 
-  // 계산 결과
-  const calResult = numCalculate(getPreNum(), getOperation(), getNextNum());   
+  // 계산 결과 반영
+  const calResult = numCalculate(getPreNum(), getOperation(), getNextNum()); // ex) 3 + 6
   result.innerText = calResult;
 
   // 히스토리 저장
@@ -112,8 +109,8 @@ function loadCal() {
   inputHistory(`cal_history_${historyNum}`, `${getPreNum()} ${getOperation()} ${getNextNum()} = ${calResult}`)
 
   // 계산 후 버튼 활성화, 상태 관리
-  btnBlock(all_btn, "auto"); 
-  afterCal(); 
+  btnBlock(all_btn, "auto");
+  afterCal();
 
   // 히스토리 갱신
   getLocalStorage();

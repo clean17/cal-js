@@ -30,7 +30,7 @@ td {
 }
 #back,
 #clear {
-  background-color: rgb(250, 215, 215) ;
+  background-color: rgb(250, 215, 215);
 }
 
 .num_btn,
@@ -107,12 +107,16 @@ td {
 
 #loading {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 100px;
+  left: 120px;
   z-index: 2;
   margin: 20px 0 0 0;
   /* visibility: hidden; */
   display: none;
+  background-image: url("/static/icon-calculator.png");
+  background-size: contain;
+  width: 150px;
+  height: 150px;
 }
 
 
