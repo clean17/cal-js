@@ -1,80 +1,81 @@
-let pre_num = "";
-let pre_num_length = 0;
-let next_num = "";
-let next_num_length = 0;
-let operation = ""; // 연산자
-let op_bool = false; // 연산자 입력 여부
-let delay_time = 1000;
+const calculator = {
+    pre_num: "",
+    pre_num_length: 0,
+    next_num: "",
+    next_num_length: 0,
+    operation: "", // 연산자
+    op_bool: false, // 연산자 입력 여부
+    gray_color: "rgb(165, 165, 165)",
+    num_btn_color: "rgb(245, 240, 233)",
+    ob_btn_color: "rgb(236, 255, 255)",
+    back_clear_btn_color: "rgb(250, 215, 215)",
+};
 
-const wait = () => new Promise((resolve) => setTimeout(resolve, delay_time))
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-function changePreNum(str) {
-    return pre_num = str;
+function setPreNum(str) {
+    return calculator.pre_num = str;
 }
 
-function changeNextNum(str) {
-    return next_num = str;
+function setNextNum(str) {
+    return calculator.next_num = str;
 }
 
-function changeOperation(str) {
-    return operation = str;
+function setOperation(str) {
+    return calculator.operation = str;
 }
 
-function changeOpBool(bool) {
-    return op_bool = bool;
+function setOpBool(bool) {
+    return calculator.op_bool = bool;
 }
 
-function changeNextNumLength(num) {
-    next_num_length += num;
+function setNextNumLength(num) {
+    calculator.next_num_length += num;
 }
 
-function changePreNumLength(num) {
-    pre_num_length += num;
+function setPreNumLength(num) {
+    calculator.pre_num_length += num;
 }
 
 function stateClear() {
-    pre_num = "";
-    pre_num_length = 0;
-    next_num = "";
-    next_num_length = 0;
-    operation = "";
-    op_bool = false;
+    calculator.pre_num = "";
+    calculator.pre_num_length = 0;
+    calculator.next_num = "";
+    calculator.next_num_length = 0;
+    calculator.operation = "";
+    calculator.op_bool = false;
 }
 
-function afterCalState(str, num) {
-    pre_num = str
-    pre_num_length = num
-    next_num = "";
-    next_num_length = 0;
-    operation = "";
-    op_bool = false;
+function setState(str, num) {
+    calculator.pre_num = str
+    calculator.pre_num_length = num
+    calculator.next_num = "";
+    calculator.next_num_length = 0;
+    calculator.operation = "";
+    calculator.op_bool = false;
 }
 
 function getPreNum() {
-    return pre_num;
+    return calculator.pre_num;
 }
 
 function getNextNum() {
-    return next_num;
+    return calculator.next_num;
 }
 
 function getNextNumLength() {
-    return next_num_length;
-}
-
-function getDelayTime() {
-    return delay_time;
+    return calculator.next_num_length;
 }
 
 function getOperation() {
-    return operation;
+    return calculator.operation;
 }
 
-function getOpBool() {
-    return op_bool;
+function isOpBool() {
+    return calculator.op_bool;
 }
 
-function lotateAnimation(opt) {
+function lotateAnimation(ms) {
     const loading = document.querySelector("#loading")
 
     const aliceTumbling = [
@@ -82,69 +83,84 @@ function lotateAnimation(opt) {
         { transform: "rotate(720deg) scale(1)" },
     ];
     const aliceTiming = {
-        duration: delay_time,
+        duration: ms,
         iterations: Infinity, // 반복횟수
         fill: "forwards", // 효과 유지
     };
+
     // visibility - hidden/visible
-    opt === "auto" ? btnOn() : btnOff()
     loading.animate(aliceTumbling, aliceTiming);
 }
 
-function btnOff() {
-    const loading = document.querySelector("#loading")
-    const num_btn = document.querySelectorAll(".num_btn");
-    const op_btn = document.querySelectorAll(".op_btn");
-    const back = document.querySelector("#back");
-    const clear = document.querySelector("#clear");
-    const equal = document.querySelector("#equal");
-    num_btn.forEach((btn) => {
-        btn.style["background-color"] = "gray";
-    });
-    op_btn.forEach((btn) => {
-        btn.style["background-color"] = "gray";
-    });
-    back.style["background-color"] = "gray";
-    clear.style["background-color"] = "gray";
-    equal.style["background-color"] = "gray";
-
-    loading.style["display"] = "block";
+function setButton(opt) {
+    opt === "auto" ? btnOn(opt) : btnOff(opt);
 }
 
-function btnOn() {
+function btnOn(opt) {
+    const all_btn = document.querySelectorAll("button");
     const loading = document.querySelector("#loading")
     const num_btn = document.querySelectorAll(".num_btn");
     const op_btn = document.querySelectorAll(".op_btn");
     const back = document.querySelector("#back");
     const clear = document.querySelector("#clear");
     const equal = document.querySelector("#equal");
+
+    all_btn.forEach((btn) => {
+        btn.style["pointer-events"] = opt; // "auto", "none" - 버튼
+      });
     num_btn.forEach((btn) => {
-        btn.style["background-color"] = "rgb(245, 240, 233)";
+        btn.style["background-color"] = calculator.num_btn_color;
     });
     op_btn.forEach((btn) => {
-        btn.style["background-color"] = "rgb(236, 255, 255)";
+        btn.style["background-color"] = calculator.ob_btn_color;
     });
-    back.style["background-color"] = "rgb(250, 215, 215)";
-    clear.style["background-color"] = "rgb(250, 215, 215)";
-    equal.style["background-color"] = "rgb(236, 255, 255)";
+    back.style["background-color"] = calculator.back_clear_btn_color;
+    clear.style["background-color"] = calculator.back_clear_btn_color;
+    equal.style["background-color"] = calculator.ob_btn_color;
 
     loading.style["display"] = "none"
 }
 
+function btnOff(opt) {
+    const all_btn = document.querySelectorAll("button");
+    const loading = document.querySelector("#loading")
+    const num_btn = document.querySelectorAll(".num_btn");
+    const op_btn = document.querySelectorAll(".op_btn");
+    const back = document.querySelector("#back");
+    const clear = document.querySelector("#clear");
+    const equal = document.querySelector("#equal");
+
+    all_btn.forEach((btn) => {
+        btn.style["pointer-events"] = opt; // "auto", "none" - 버튼
+    });
+    num_btn.forEach((btn) => {
+        btn.style["background-color"] = calculator.gray_color;
+    });
+    op_btn.forEach((btn) => {
+        btn.style["background-color"] = calculator.gray_color;
+    });
+    back.style["background-color"] = calculator.gray_color;
+    clear.style["background-color"] = calculator.gray_color;
+    equal.style["background-color"] = calculator.gray_color;
+
+    loading.style["display"] = "block";
+}
+
 export {
-    changePreNum,
-    changeNextNum,
-    changePreNumLength,
-    changeNextNumLength,
-    changeOperation,
-    changeOpBool,
+    setPreNum,
+    setNextNum,
+    setPreNumLength,
+    setNextNumLength,
+    setOperation,
+    setOpBool,
+    setState,
+    setButton,
     getPreNum,
     getNextNum,
-    wait,
     getNextNumLength,
-    getOpBool,
     getOperation,
-    afterCalState,
+    isOpBool,
+    wait,
     stateClear,
     lotateAnimation,
 }

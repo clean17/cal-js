@@ -1,17 +1,18 @@
 import {
-  changePreNum,
-  changeNextNum,
-  changePreNumLength,
-  changeNextNumLength,
-  changeOperation,
-  changeOpBool,
+  setPreNum,
+  setNextNum,
+  setPreNumLength,
+  setNextNumLength,
+  setOperation,
+  setOpBool,
+  setState,
+  setButton,
   getPreNum,
   getNextNum,
-  wait,
   getNextNumLength,
-  getOpBool,
   getOperation,
-  afterCalState,
+  isOpBool,
+  wait,
   stateClear,
   lotateAnimation,
 } from './cal_module.js'
@@ -20,12 +21,13 @@ import {
   showHistory,
   getLocalStorage,
   getLocalStorageLength,
-  clearLocalStorage,
+  clearHistory,
   inputHistory
 } from './history_module.js'
 
 
 ////////////////////// 마우스 ////////////////////////////
+
 // 숫자 버튼
 document.querySelectorAll(".num_btn").forEach((butten) => {
   butten.addEventListener("click", (e) => {
@@ -52,7 +54,7 @@ document.querySelector("#clear").addEventListener("click", () => {
 
 // Backspace - 입력 취소
 document.querySelector("#back").addEventListener("click", () => {
-  lastInputCancel(getOpBool());
+  lastInputCancel(isOpBool());
 });
 
 
@@ -63,11 +65,12 @@ document.querySelector("#history_btn").addEventListener("click", () => {
 
 // 히스토리 리셋
 document.querySelector("#history_reset").addEventListener("click", () => {
-  clearLocalStorage();
+  clearHistory();
 })
 
 
 /////////////////////// 키보드 ////////////////////////////
+
 window.addEventListener("keydown", (event) => {
   // 기본 동작 취소 - 마우스 클릭하고 엔터를 누르면 마지막으로 클릭한 버튼 입력 방지
   event.preventDefault();
@@ -75,30 +78,29 @@ window.addEventListener("keydown", (event) => {
   keydownFun(key_name);
 });
 
+
+//////////////////////// 함수 /////////////////////////////
+
 // 계산 트리거
 async function calculate() {
-  const all_btn = document.querySelectorAll("button");
-  btnBlock(all_btn, "none"); // 버튼 비활성화
+  btnToggle("none"); // 버튼 비활성화
   if (getNextNum() !== "") {
-    await wait();
-    loadCal();
+    await wait(1000);
+    loadCalculate();
   } else {
-    btnBlock(all_btn, "auto"); // 버튼 활성화
+    btnToggle("auto"); // 버튼 활성화
   }
 }
 
 // 버튼 활성화 / 비활성화
-function btnBlock(btn, opt) {
-  btn.forEach((e) => {
-    e.style["pointer-events"] = opt; // "auto", "none" - 버튼
-  });
-  lotateAnimation(opt);
+function btnToggle(opt) {
+  setButton(opt);
+  lotateAnimation(1000);
 }
 
 // 계산 함수 호출
-function loadCal() {
+function loadCalculate() {
   const result = document.querySelector("#result");
-  const all_btn = document.querySelectorAll("button");
 
   // 계산 결과 반영
   const calResult = numCalculate(getPreNum(), getOperation(), getNextNum()); // ex) 3 + 6
@@ -106,11 +108,11 @@ function loadCal() {
 
   // 히스토리 저장
   const historyNum = getLocalStorageLength();
-  inputHistory(`cal_history_${historyNum}`, `${getPreNum()} ${getOperation()} ${getNextNum()} = ${calResult}`)
+  inputHistory(historyNum, getPreNum(), getOperation(), getNextNum(), calResult);
 
   // 계산 후 버튼 활성화, 상태 관리
-  btnBlock(all_btn, "auto");
-  afterCal();
+  btnToggle("auto");
+  setState(result.innerText, result.innerText.length)
 
   // 히스토리 갱신
   getLocalStorage();
@@ -120,25 +122,25 @@ function loadCal() {
 function numInput(btn) {
   const result = document.querySelector("#result");
   result.innerText += btn;
-  if (getOpBool()) {
-    changeNextNum(getNextNum() + btn);
-    changeNextNumLength(1);
+  if (isOpBool()) {
+    setNextNum(getNextNum() + btn);
+    setNextNumLength(1);
   } else {
-    changePreNum(getPreNum() + btn);
-    changePreNumLength(1);
+    setPreNum(getPreNum() + btn);
+    setPreNumLength(1);
   }
 }
 
 // 연산자 저장
 function opInput(btn) {
   const result = document.querySelector("#result");
-  changeOperation(btn);
-  if (getOpBool()) { // 두번째부터
+  setOperation(btn);
+  if (isOpBool()) { // 두번째부터
     result.innerText = result.innerText.slice(0, -1) + btn;
     return;
   }
   result.innerText += btn;
-  changeOpBool(true);
+  setOpBool(true);
 }
 
 // 숫자 계산
@@ -168,25 +170,19 @@ function lastInputCancel(bool) {
 
   // 연산자가 마지막 입력일 경우
   if (bool && getNextNumLength() === 0) {
-    changeOpBool(false);
-    changeOperation("");
+    setOpBool(false);
+    setOperation("");
 
     // 두번째 숫자 취소
   } else if (bool && getNextNumLength() > 0) {
-    changeNextNum(getNextNum().slice(0, -1));
-    changeNextNumLength(-1);
+    setNextNum(getNextNum().slice(0, -1));
+    setNextNumLength(-1);
 
     // 첫번째 숫자 취소
   } else {
-    changePreNum(getPreNum().slice(0, -1));
-    changePreNumLength(-1);
+    setPreNum(getPreNum().slice(0, -1));
+    setPreNumLength(-1);
   }
-}
-
-// 계산 후 상태 관리
-function afterCal() {
-  const result = document.querySelector("#result");
-  afterCalState(result.innerText, result.innerText.length)
 }
 
 // 모든 상태 초기화
@@ -212,7 +208,7 @@ function keydownFun(key_name) {
       break;
 
     case "Backspace":
-      lastInputCancel(getOpBool());
+      lastInputCancel(isOpBool());
       break;
   }
 }
