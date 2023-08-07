@@ -30,15 +30,48 @@ td {
   text-overflow: ellipsis;
 }
 
-#container{
+#container {
   position: relative;
+  
 }
 
-#calculator{
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+#calculator {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
+}
+
+#history_list {
+  list-style: none;
+  padding: 0;
+  display: none;
+  margin-top: 20px;
+  height: 250px;
+  width: 200px;
+  border: 1px solid black;
+  text-align: center;
+  line-height: 40px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: scroll;
+}
+#history_box button {
+  margin-right: 40px;
+  width: 80px;
+  height: 30px;
+}
+
+#history_box {
+  margin: 40px 40px 0 0 ;
+}
+#history_reset {
+  display: none;
 }
 
 #loading {

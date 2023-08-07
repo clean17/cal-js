@@ -15,6 +15,14 @@ import {
   stateClear,
 } from './cal_module.js'
 
+import {
+  showHistory,
+  getLocalStorage,
+  getLocalStorageLength,
+  clearLocalStorage,
+  inputHistory
+} from './history_module.js'
+
 
 ////////////////////// 마우스 ////////////////////////////
 // 숫자 버튼
@@ -45,6 +53,17 @@ document.querySelector("#clear").addEventListener("click", () => {
 document.querySelector("#back").addEventListener("click", () => {
   lastInputCancel(getOpBool());
 });
+
+
+// 히스토리
+document.querySelector("#history_btn").addEventListener("click", () => {
+  showHistory();
+})
+
+// 히스토리 리셋
+document.querySelector("#history_reset").addEventListener("click", () => {
+  clearLocalStorage();
+})
 
 
 /////////////////////// 키보드 ////////////////////////////
@@ -83,9 +102,21 @@ function btnBlock(btn, opt) {
 function loadCal() {
   const result = document.querySelector("#result");
   const all_btn = document.querySelectorAll("button");
-  result.innerText = numCalculate(getPreNum(), getOperation(), getNextNum());
-  btnBlock(all_btn, "auto"); // 계산 후 버튼 활성화
-  afterCal();
+
+  // 계산 결과
+  const calResult = numCalculate(getPreNum(), getOperation(), getNextNum());   
+  result.innerText = calResult;
+
+  // 히스토리 저장
+  const historyNum = getLocalStorageLength();
+  inputHistory(`cal_history_${historyNum}`, `${getPreNum()} ${getOperation()} ${getNextNum()} = ${calResult}`)
+
+  // 계산 후 버튼 활성화, 상태 관리
+  btnBlock(all_btn, "auto"); 
+  afterCal(); 
+
+  // 히스토리 갱신
+  getLocalStorage();
 }
 
 // 입력된 숫자 저장

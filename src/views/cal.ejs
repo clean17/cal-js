@@ -14,87 +14,90 @@
         <div id="loading">
             <img src="/static/icon-calculator.png" width="370px">
         </div>
-        <div id="calculator">
-            <table>
-                <thead>
-                    <tr>
-                        <td>
-                            <button type="button" id="back">B</button>
-                        </td>
-                        <td>
-                            <button type="button" id="clear">C</button>
-                        </td>
-                        <td colspan="2">
-                            <div id="result"></div>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <button type="button" class="num_btn">7</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">8</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">9</button>
-                        </td>
-                        <td>
-                            <button type="button" class="op_btn">/</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" class="num_btn">4</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">5</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">6</button>
-                        </td>
-                        <td>
-                            <button type="button" class="op_btn">*</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" class="num_btn">1</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">2</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">3</button>
-                        </td>
-                        <td>
-                            <button type="button" class="op_btn">-</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" class="num_btn">.</button>
-                        </td>
-                        <td>
-                            <button type="button" class="num_btn">0</button>
-                        </td>
-                        <td>
-                            <button type="button" id="equal">=</button>
-                        </td>
-                        <td>
-                            <button type="button" class="op_btn">+</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="calculator" class="flex">
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                <button type="button" id="back">B</button>
+                            </td>
+                            <td>
+                                <button type="button" id="clear">C</button>
+                            </td>
+                            <td colspan="2">
+                                <div id="result"></div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <button type="button" class="num_btn">7</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">8</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">9</button>
+                            </td>
+                            <td>
+                                <button type="button" class="op_btn">/</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button type="button" class="num_btn">4</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">5</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">6</button>
+                            </td>
+                            <td>
+                                <button type="button" class="op_btn">*</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button type="button" class="num_btn">1</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">2</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">3</button>
+                            </td>
+                            <td>
+                                <button type="button" class="op_btn">-</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button type="button" class="num_btn">.</button>
+                            </td>
+                            <td>
+                                <button type="button" class="num_btn">0</button>
+                            </td>
+                            <td>
+                                <button type="button" id="equal">=</button>
+                            </td>
+                            <td>
+                                <button type="button" class="op_btn">+</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="history_box">
+                <div class="flex">
+                    <button type="button" id="history_btn">히스토리</button>
+                    <button type="button" id="history_reset">리셋</button>
+                </div>
+                <div id="history_list"></div>
+            </div>
         </div>
-<!--         <div id="test1">160px</div>
-        <div id="test3">20rem</div>
-        <div id="container2">
-            <div id="test2">10em</div>
-            <div id="test4">100%</div>
-        </div> -->
     </div>
 </body>
 
