@@ -1,5 +1,5 @@
 table {
-  border: 1px solid black;
+  border: 2px solid black;
   margin: 40px 40px 40px 60px;
   border-collapse: separate;
 }
@@ -46,7 +46,7 @@ td {
 #result {
   height: 47px;
   width: 110px;
-  border: 1px solid black;
+  border: 2px solid black;
   text-align: center;
   line-height: 40px;
   white-space: nowrap;
