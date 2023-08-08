@@ -7,7 +7,6 @@ import {
 } from './history_module.js'
 
 
-
 const my_btn_dom = (function () {
     const my_all_btn = document.querySelectorAll("button");
     const my_loading = document.querySelector("#loading")
@@ -68,6 +67,7 @@ function loadCalculate() {
 
 // 입력된 숫자 저장
 function numInput(btn) {
+    
     const result = document.querySelector("#result");
     result.innerText += btn;
 
@@ -78,6 +78,7 @@ function numInput(btn) {
         myCal.setPreNum(myCal.getPreNum() + btn);
         myCal.setPreNumLength(1);
     }
+    console.log(myCal.pre_num);
 }
 
 // 연산자 저장
@@ -147,18 +148,19 @@ function setButton(opt) {
         btn.style["pointer-events"] = opt;
     });
     my_btn_dom.num_btn().forEach((btn) => {
-        btn.style["background-color"] = opt === "auto" ? myCal.primary_color : myCal.gray_color;
+        btn.style["background-color"] = opt === "auto" ? myCal.getPrimaryColor() : myCal.getGrayColor();
     });
     my_btn_dom.op_btn().forEach((btn) => {
-        btn.style["background-color"] = opt === "auto" ? myCal.second_color : myCal.gray_color;
+        btn.style["background-color"] = opt === "auto" ? myCal.getSecondColor() : myCal.getGrayColor();
     });
-    my_btn_dom.back().style["background-color"] = opt === "auto" ? myCal.third_color : myCal.gray_color;
-    my_btn_dom.clear().style["background-color"] = opt === "auto" ? myCal.third_color : myCal.gray_color;
-    my_btn_dom.equal().style["background-color"] = opt === "auto" ? myCal.second_color : myCal.gray_color;
+    my_btn_dom.back().style["background-color"] = opt === "auto" ? myCal.getThirdColor() : myCal.getGrayColor();
+    my_btn_dom.clear().style["background-color"] = opt === "auto" ? myCal.getThirdColor() : myCal.getGrayColor();
+    my_btn_dom.equal().style["background-color"] = opt === "auto" ? myCal.getSecondColor() : myCal.getGrayColor();
 
     my_btn_dom.loading().style["display"] = opt === "auto" ? "none" : "block";
 }
 
+// 로딩 이미지 회전
 function lotateAnimation(ms) {
     const aliceTumbling = [
         { transform: "rotate(0) scale(1)" },
