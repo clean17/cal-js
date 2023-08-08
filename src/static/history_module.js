@@ -6,7 +6,7 @@ function inputHistory(key, numA, op, numB, result) {
     localStorage.setItem( myHistory.privateKey + key, `${numA} ${op} ${numB} = ${result}`);
 }
 
-function countHistory() {
+function getHistoryLength() {
     let count = 0;
     for (let i = 0; i < localStorage.length; i++) {
         if (localStorage.key(i).startsWith( myHistory.privateKey )) {
@@ -28,8 +28,8 @@ function clearHistory() {
     }
 }
 
-function getLocalStorage() {
-    const historyNum = countHistory();
+function getHistory() {
+    const historyNum = getHistoryLength();
     const history = document.querySelector("#history_list");
     history.innerHTML = "";
 
@@ -51,18 +51,14 @@ function showHistory() {
     } else {
         history.style.display = "block";
         reset.style.display = "block";
-        getLocalStorage();
+        getHistory();
     }
-}
-
-function getLocalStorageLength() {
-    return localStorage.length;
 }
 
 export {
     showHistory,
     inputHistory,
-    getLocalStorage,
-    getLocalStorageLength,
+    getHistory,
+    getHistoryLength,
     clearHistory,
 }

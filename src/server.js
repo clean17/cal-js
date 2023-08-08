@@ -10,6 +10,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set("views", __dirname + "/views");
 app.use("/static", express.static(__dirname + "/static"));
+app.use("/model", express.static(__dirname + "/model")); // 모델
 
 app.get('/', (req, res) => {
     res.render('cal');
