@@ -58,3 +58,11 @@ lt -p 3000 -s [주소이름]
 ```html
 <script type="module" src="/static/cal.js"></script>
 ```
+- jest 테스트
+```
+$ npm i --save-D jest
+```
+스크립트 추가
+```
+"test": "jest"
+```

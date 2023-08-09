@@ -11,6 +11,7 @@ app.set('view engine', 'ejs');
 app.set("views", __dirname + "/views");
 app.use("/static", express.static(__dirname + "/static"));
 app.use("/model", express.static(__dirname + "/model")); // 모델
+// app.use("/etc", express.static(__dirname + "/etc")); // 기타
 
 app.get('/', (req, res) => {
     res.render('cal');

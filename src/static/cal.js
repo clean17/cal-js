@@ -1,9 +1,9 @@
 import {
-  numInput,
-  opInput,
+  inputNum,
+  inputOperator,
   calculate,
-  clear,
-  lastInputCancel,
+  stateClear,
+  backspace,
 } from './cal_module.js'
 
 import {
@@ -15,36 +15,36 @@ import {
 ////////////////////// 마우스 ////////////////////////////
 
 // 숫자 버튼
-document.querySelectorAll(".num_btn").forEach((butten) => {
-  butten.addEventListener("click", (e) => {
-    numInput(e.target.innerText);
+document.querySelectorAll(".num_btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    inputNum(e.target.innerText);
   });
 });
 
 // 연산자
-document.querySelectorAll(".op_btn").forEach((butten) => {
-  butten.addEventListener("click", (e) => {
-    opInput(e.target.innerText);
+document.querySelectorAll(".op_btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    inputOperator(e.target.innerText);
   });
 });
 
-// "=", Enter - 계산
+// "=" 버튼, Enter 키
 document.querySelector("#equal").addEventListener("click", () => {
   calculate();
 });
 
-// Clear
+// "Clear" 버튼
 document.querySelector("#clear").addEventListener("click", () => {
-  clear();
+  stateClear();
 });
 
-// Backspace - 입력 취소
+// "Backspace" 버튼, 키
 document.querySelector("#back").addEventListener("click", () => {
-  lastInputCancel();
+  backspace();
 });
 
 
-// 히스토리
+// 히스토리 보기
 document.querySelector("#history_btn").addEventListener("click", () => {
   showHistory();
 })
@@ -59,19 +59,18 @@ document.querySelector("#history_reset").addEventListener("click", () => {
 
 window.addEventListener("keydown", (event) => {
   event.preventDefault(); // 기본 동작 취소
-  const key_name = event.key; // string
-  keydownFun(key_name);
+  const keyName = event.key; // string
+  pressKey(keyName);
 });
 
-// 키보드 입력
-function keydownFun(key_name) {
-  switch (key_name) {
+function pressKey(keyName) {
+  switch (keyName) {
     case "0": case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9": case ".":
-      numInput(key_name);
+      inputNum(keyName);
       break;
 
     case "+": case "-": case "*": case "/":
-      opInput(key_name);
+      inputOperator(keyName);
       break;
 
     case "Enter":
@@ -79,7 +78,7 @@ function keydownFun(key_name) {
       break;
 
     case "Backspace":
-      lastInputCancel();
+      backspace();
       break;
   }
 }

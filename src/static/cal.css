@@ -1,3 +1,21 @@
+/* 전체 레이아웃 */
+#container {
+  position: relative;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+#calculator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* 계산기 레이아웃 */
 table {
   border: 2px solid black;
   margin: 40px 40px 40px 60px;
@@ -21,56 +39,7 @@ td {
   padding: 5px;
 }
 
-.num_btn {
-  background-color: rgb(245, 240, 233);
-}
-.op_btn,
-#equal  {
-  background-color: rgb(236, 255, 255);
-}
-#back,
-#clear {
-  background-color: rgb(250, 215, 215);
-}
-
-.num_btn,
-.op_btn,
-#equal,
-#back,
-#clear {
-  padding: 10px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
-#result {
-  height: 47px;
-  width: 110px;
-  border: 2px solid black;
-  text-align: center;
-  line-height: 40px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-#container {
-  position: relative;
-}
-
-.flex {
-  display: flex;
-  justify-content: center;
-}
-
-#calculator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
+/* 히스토리 레이아웃 */
 #history_list {
   list-style: none;
   padding: 0;
@@ -86,6 +55,10 @@ td {
   overflow-y:auto
 }
 
+#history_box {
+  margin: 40px 40px 0 0 ;
+}
+
 #history_box button {
   border: 1px solid white;
   color: white;
@@ -93,10 +66,6 @@ td {
   width: 80px;
   height: 30px;
   cursor: pointer;
-}
-
-#history_box {
-  margin: 40px 40px 0 0 ;
 }
 
 #history_btn {
@@ -107,6 +76,65 @@ td {
   display: none;
 }
 
+/* 버튼 색 변경 */
+.num_btn {
+  background-color: rgb(245, 240, 233);
+
+  &[disabled] {
+    background-color: rgb(165, 165, 165);
+  }
+}
+.op_btn,
+#equal  {
+  background-color: rgb(236, 255, 255);
+
+  &[disabled] {
+    background-color: rgb(165, 165, 165);
+  }
+}
+#back,
+#clear {
+  background-color: rgb(250, 215, 215);
+
+  &[disabled] {
+    background-color: rgb(165, 165, 165);
+  }
+}
+
+/* 버튼 활성 or 비활성 */
+.num_btn,
+.op_btn,
+#equal,
+#back,
+#clear {
+  padding: 10px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  pointer-events: auto;
+
+  &[disabled] {
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+/* 계산 결과 */
+#result {
+  height: 47px;
+  width: 110px;
+  border: 2px solid black;
+  text-align: center;
+  line-height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 로딩 이미지 */
 #loading {
   position: absolute;
   top: 100px;

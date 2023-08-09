@@ -1,186 +1,190 @@
-import { myCal } from '../model/cal.js'
-
 import {
     inputHistory,
     getHistory,
     getHistoryLength,
 } from './history_module.js'
 
+// 초기 상태 세팅
+/* 입력 취소 및 소수점 취소의 편의를 위해 string으로 저장 */
+const calState = {
+    preNum: "",
+    nextNum: "",
+    operator: "",
+    checkOperator: false,
+};
 
-const my_btn_dom = (function () {
-    const my_all_btn = document.querySelectorAll("button");
-    const my_loading = document.querySelector("#loading")
-    const my_num_btn = document.querySelectorAll(".num_btn");
-    const my_op_btn = document.querySelectorAll(".op_btn");
-    const my_back = document.querySelector("#back");
-    const my_clear = document.querySelector("#clear");
-    const my_equal = document.querySelector("#equal");
 
-    return { // 표현식 안됨
-        all_btn: function () { return my_all_btn },
-        loading: function () { return my_loading },
-        num_btn: function () { return my_num_btn },
-        op_btn: function () { return my_op_btn },
-        back: function () { return my_back },
-        clear: function () { return my_clear },
-        equal: function () { return my_equal },
+
+
+// 숫자 저장
+function inputNum(num) {
+    if(typeof num !== 'string') {
+        console.log('string 타입의 숫자만 입력 가능합니다.');
+        alert('"0 ~ 9" 버튼이나 키보드의 숫자 키로 입력하세요.');
+        return;
     };
-})();
 
-// 계산 트리거
-async function calculate() {
-    const wait =
-        (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+    document.querySelector("#result").innerText += num; // 뷰
 
-    btnToggle("none"); // 버튼 OFF
-    if (myCal.getNextNum() !== "") {
-        await wait(1000);
-        loadCalculate();
-    } else {
-        btnToggle("auto"); // 버튼 ON
-    }
-}
-
-// 버튼 ON / OFF
-function btnToggle(opt) {
-    setButton(opt);
-    lotateAnimation(1000);
-}
-
-// 계산 함수 호출
-function loadCalculate() {
-    const result = document.querySelector("#result");
-
-    // 계산 결과 반영
-    const calResult = numCalculate(myCal.getPreNum(), myCal.getOperation(), myCal.getNextNum()); // ex) 3 + 6
-    result.innerText = calResult;
-
-    // 히스토리 저장 후 갱신
-    const historyNum = getHistoryLength();
-    inputHistory(historyNum, myCal.getPreNum(), myCal.getOperation(), myCal.getNextNum(), calResult);
-    getHistory();
-
-    // 계산 후 버튼 활성화, 상태 관리
-    btnToggle("auto");
-    myCal.setState(result.innerText, result.innerText.length)
-}
-
-// 입력된 숫자 저장
-function numInput(btn) {
-    
-    const result = document.querySelector("#result");
-    result.innerText += btn;
-
-    if (myCal.isOpBool()) {
-        myCal.setNextNum(myCal.getNextNum() + btn);
-        myCal.setNextNumLength(1);
-    } else {
-        myCal.setPreNum(myCal.getPreNum() + btn);
-        myCal.setPreNumLength(1);
-    }
-    console.log(myCal.pre_num);
+    // 연산자 입력 여부 -> 첫번째(x) / 두번째(o) 저장
+    calState.checkOperator ? calState.nextNum += num : calState.preNum += num;
 }
 
 // 연산자 저장
-function opInput(btn) {
+function inputOperator(op) {
+    if(typeof op !== 'string') {
+        console.log('string 타입의 연산자만 입력 가능합니다.');
+        alert('" + ", " - ", " * ", " / " 버튼이나 키보드의 연산 키로 입력하세요.');
+        return;
+    };
+
+    // 연산자 저장
+    calState.operator = op;
     const result = document.querySelector("#result");
-    myCal.setOperation(btn);
-    if (myCal.isOpBool()) { // 두번째부터
-        result.innerText = result.innerText.slice(0, -1) + btn;
+
+    // 연산자를 연속으로 입력 시 마지막 연산자만 유효
+    result.innerText = calState.checkOperator ? 
+        result.innerText.slice(0, -1) + op : result.innerText += op; // 뷰
+
+    calState.checkOperator = true;
+}
+
+
+
+// 계산 트리거 ("=" 버튼이나 "Enter" 키 입력 시)
+async function calculate() {
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+    // 연산자 입력 후 두번째 숫자를 입력했을 경우에만 계산
+    if (calState.nextNum !== "") {
+        btnOff();
+        rotateAnimation(1000)
+        await wait(1000);
+        startCalculate();
+    }
+}
+
+function btnOff() {
+    document.querySelectorAll("button")
+        .forEach((btn) => {
+            btn.disabled = true;
+        });
+    document.querySelector("#loading").style.display = "block";
+}
+
+function btnOn() {
+    document.querySelectorAll("button")
+        .forEach((btn) => {
+            btn.disabled = false;
+        });
+    document.querySelector("#loading").style.display = "none";
+}
+
+
+
+// 계산 함수 호출
+function startCalculate() {
+    // 계산 결과
+    const calResult = numCalculate(calState.preNum, calState.operator, calState.nextNum); // ex) 3 + 6
+
+    if(isNaN(calResult) || calResult === undefined) {
+        stateClear();
+        alert('계산식이 올바르지 않습니다.');
         return;
     }
-    result.innerText += btn;
-    myCal.setOpBool(true);
+    document.querySelector("#result").innerText = calResult; // 뷰
+    
+    // 히스토리 저장 후 갱신
+    inputHistory(getHistoryLength(), 
+        calState.preNum, calState.operator, calState.nextNum, calResult); // '3 + 6 = 9' 저장
+    getHistory();
+
+    // 계산 후 버튼 활성화, 상태 관리
+    setState(calResult);  
+    btnOn();
 }
+
+// 계산 후 상태
+function setState(result) {
+    calState.preNum = result;
+    calState.nextNum = "";
+    calState.operator = "";
+    calState.checkOperator = false;
+};
+
+// 모든 상태 초기화
+function stateClear() {
+    document.querySelector("#result").innerText = ""; // 뷰
+    calState.preNum = "";
+    calState.nextNum = "";
+    calState.operator = "";
+    calState.checkOperator = false;
+}
+
+
 
 // 숫자 계산
 function numCalculate(numA, operation, numB) {
-    let cal_result;
+    let result;
     switch (operation) {
         case "/":
-            cal_result = Number(numA) / Number(numB);
+            result = Number(numA) / Number(numB);
             break;
         case "*":
-            cal_result = Number(numA) * Number(numB);
+            result = Number(numA) * Number(numB);
             break;
         case "-":
-            cal_result = Number(numA) - Number(numB);
+            result = Number(numA) - Number(numB);
             break;
         case "+":
-            cal_result = Number(numA) + Number(numB);
+            result = Number(numA) + Number(numB);
             break;
     }
-    return Number(cal_result.toFixed(2));
+    return parseFloat(result.toFixed(2));
 }
 
+
+
 // 마지막 입력 취소
-function lastInputCancel() {
-    const result = document.querySelector("#result");
-    result.innerText = result.innerText.slice(0, -1);
+function backspace() {
+    document.querySelector("#result").innerText = result.innerText.slice(0, -1); // 뷰
 
     // 연산자가 마지막 입력일 경우
-    if (myCal.isOpBool() && myCal.getNextNumLength() === 0) {
-        myCal.setOpBool(false);
-        myCal.setOperation("");
+    if (calState.operator && calState.nextNum.length === 0) {
+        calState.checkOperator = false;
+        calState.operator = "";
 
-        // 두번째 숫자 취소
-    } else if (myCal.isOpBool() && myCal.getNextNumLength() > 0) {
-        myCal.setNextNum(myCal.getNextNum().slice(0, -1));
-        myCal.setNextNumLength(-1);
+    // 두번째 숫자가 마지막 입력일 경우
+    } else if (calState.operator && calState.nextNum.length > 0) {
+        calState.nextNum = calState.nextNum.slice(0, -1);
 
-        // 첫번째 숫자 취소
+    // 첫번째 숫자가 마지막 입력일 경우
     } else {
-        myCal.setPreNum(myCal.getPreNum().slice(0, -1));
-        myCal.setPreNumLength(-1);
+        calState.preNum = calState.preNum.slice(0, -1);
     }
 }
 
-// 모든 상태 초기화
-function clear() {
-    const result = document.querySelector("#result");
-    result.innerText = "";
-    myCal.setStateClear()
-}
 
-// "auto", "none" - 버튼 활성 / 비활성
-function setButton(opt) {
-    my_btn_dom.all_btn().forEach((btn) => {
-        btn.style["pointer-events"] = opt;
-    });
-    my_btn_dom.num_btn().forEach((btn) => {
-        btn.style["background-color"] = opt === "auto" ? myCal.getPrimaryColor() : myCal.getGrayColor();
-    });
-    my_btn_dom.op_btn().forEach((btn) => {
-        btn.style["background-color"] = opt === "auto" ? myCal.getSecondColor() : myCal.getGrayColor();
-    });
-    my_btn_dom.back().style["background-color"] = opt === "auto" ? myCal.getThirdColor() : myCal.getGrayColor();
-    my_btn_dom.clear().style["background-color"] = opt === "auto" ? myCal.getThirdColor() : myCal.getGrayColor();
-    my_btn_dom.equal().style["background-color"] = opt === "auto" ? myCal.getSecondColor() : myCal.getGrayColor();
-
-    my_btn_dom.loading().style["display"] = opt === "auto" ? "none" : "block";
-}
 
 // 로딩 이미지 회전
-function lotateAnimation(ms) {
-    const aliceTumbling = [
+function rotateAnimation(ms) {
+    const range = [
         { transform: "rotate(0) scale(1)" },
         { transform: "rotate(720deg) scale(1)" },
     ];
-    const aliceTiming = {
+    const time = {
         duration: ms,
         iterations: Infinity, // 반복횟수
-        fill: "forwards", // 효과 유지
+        fill: "none", // 효과 중지
     };
-
-    const loading = document.querySelector("#loading")
-    loading.animate(aliceTumbling, aliceTiming);
+    document.querySelector("#loading").animate(range, time);
 }
 
 
 export {
-    numInput,
-    opInput,
+    inputNum,
+    inputOperator,
     calculate,
-    clear,
-    lastInputCancel,
+    stateClear,
+    backspace,
 }
