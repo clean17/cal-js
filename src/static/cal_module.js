@@ -18,11 +18,15 @@ const calState = {
 
 // 숫자 저장
 function inputNum(num) {
-    if(typeof num !== 'string') {
+    if(typeof num !== 'string' || num === undefined || num === "") {
         console.log('string 타입의 숫자만 입력 가능합니다.');
-        alert('"0 ~ 9" 버튼이나 키보드의 숫자 키로 입력하세요.');
-        return;
+        throw new Error('"0 ~ 9" 버튼이나 키보드의 숫자 키로 입력하세요.');
     };
+    const tempNum = Math.abs(Number(num));
+    if( !(tempNum <= 9) || tempNum === NaN ) {
+        console.log('숫자를 입력하세요.');
+        throw new Error('입력한 값이 숫자가 아닙니다.');
+    }
 
     document.querySelector("#result").innerText += num; // 뷰
 
