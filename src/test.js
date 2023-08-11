@@ -1,6 +1,13 @@
-test("1 is 1", () => {
-    expect(1).toBe(1);
-});
+// @ts-check
+/** @type {number} */
+var x;
+ 
+x = 0; // OK
+// x = false; // Not OK
+
+// test("1 is 1", () => {
+//     expect(1).toBe(1);
+// });
 
 /* describe("pow", function () {
 

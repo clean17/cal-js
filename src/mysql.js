@@ -1,5 +1,7 @@
 import mysql from 'mysql2/promise';
 
+// createPoolCluster 는 뭘까?
+
 /*  
     mysql2는 Promise API 제공함 - async/await
     Prepared Statements를 지원
@@ -29,20 +31,13 @@ import mysql from 'mysql2/promise';
     FLUSH PRIVILEGES;
 */
 
-/* const pool = mysql.createPool({
-    host: process.env.CAL_HOST,
-    port: '3306',
-    user: process.env.CAL_USER,
-    password: process.env.CAL_PASSWORD,
-    database: process.env.CAL_DATABASE,
-});  */
 
 const pool = mysql.createPool({
-    host: 'localhost',
+    host: process.env.CAL_HOST || 'localhost',
     port: '3306',
-    user: 'dev',
-    password: '1234',
-    database: 'cal_history',
+    user: process.env.CAL_USER || 'dev',
+    password: process.env.CAL_PASSWORD || '1234',
+    database: process.env.CAL_DATABASE || 'cal_history',
 }); 
 
 const getConn = async() => {
