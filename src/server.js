@@ -14,7 +14,7 @@ app.use((_req, res, next) => { // cors 헤더 설정 - 외부에서 접근 허�
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
     next(); // 다음 미들웨어 호출
-  });
+});
 app.use(express.json()); // json 데이터 해석해주는 미들웨어
 // app.use(express.urlencoded({ extended: true })); //  x-www-form-urlencoded 해석
 app.use("/static", express.static(__dirname + "/static"));
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 
- 
+
 
 // 계산 히스토리 조회, 추가, 삭제
 app.route('/cal')
@@ -72,7 +72,7 @@ app.route('/user')
         conn.release();
 
         res.json(rows);
-    })  
+    })
     .post(async (req, res) => {
         const json = req.body;
         const conn = await getConn();
@@ -84,5 +84,5 @@ app.route('/user')
         res.json(json);
     });
 
-    
+ 
 app.listen(3000);

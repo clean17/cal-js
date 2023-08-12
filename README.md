@@ -32,10 +32,33 @@ app.use((_req, res, next) => {
 ![image](https://github.com/clean17/cal-js/assets/118657689/d1c17839-0bff-48ca-a865-329cc017e423)
 ![image](https://github.com/clean17/cal-js/assets/118657689/02df726b-5f0b-456a-a7aa-61645a2859dc)
 
+
+
+
+
+## babel-node
+
+ES6 이상의 문법을 사용해서 nodejs서버를 열게 된다면 이번 버전의 자바스크립트를 사용하는 브라우저의 호환성을 위해서 babel을 이용해야 한다.
+
+```
+$ npm i @babel/core @babel/cli @babel/node @babel/preset-env -d
+```
+
+`babel.config.json` 파일을 생성하고 아래 코드를 넣는다.
+```
+{
+    "presets": ["@babel/preset-env"]
+}
+```
+
+
+
 ## nodemon  <br>
 
-`nodemon --exec babel-node ./src/server.js`
-`nodemon.json`
+nodemon은 nodejs서버의 변경사항을 핫리로드 시켜준다.<br>
+
+`nodemon --exec babel-node ./src/server.js` 이렇게 길게 커맨드를 입력하지 않도록 아래 파일을 만든다.<br>
+`nodemon.json`파일을 만든뒤 아래 코드를 넣는다.
 ```
 {
     "exec":  "babel-node src/server.js"
@@ -76,6 +99,7 @@ $ ngrok http [로컬 서버 포트]
 생성된 주소를 통해 외부에서 접속 가능 <br>
 ![image](https://github.com/clean17/cal-js/assets/118657689/fe8039b1-8ec0-4553-b372-550e6bca864e)
 
+다운 받아 실행할 때는 ngrok으로부터 받은 주소로 수정하면 된다.
 
 ## 모듈 패턴 분리 -> `export`, `import`
 모듈로 선언된 스크립트안에서 `import`, `export` 가능
@@ -120,7 +144,7 @@ $ FLUSH PRIVILEGES;
 ```
 
 
-## ??, || 차이
+## `??`, `||` 차이
 
 `??` 는 `null` 또는 `undefined`일 경우에만 오른쪽 값을 리턴한다. (nullish 체크)
 ```js
@@ -134,7 +158,7 @@ let result = undefined || "default"; // result = "default"
 
 
 
-## 자바스크립트 null 체크 <br>
+## 자바스크립트 `null` 체크 <br>
 
 조건문 안에서 `null`, `""`, `0`, `undefined` 은 false 값이 된다.
 ```js
@@ -148,4 +172,34 @@ if(!obj) console.log('false'); // false
 따라서 배열의 길이가 비어 있지 않은 조건으로 실행을 하고 싶다면 아래의 코드를 사용한다.
 ```js
 if(!array.length)
+```
+
+## `isNaN` 함수<br>
+전역함수 `inNaN`은 전혀 다른 결과가 나온다.
+```js
+console.log(isNaN('string')); // true
+console.log(Number.isNaN('string')); // false
+```
+
+## `for in`, `for of` 차이 <br>
+
+`for in`문 은 객체의 요소를 반복할때 사용한다. <br>
+객체의 속성만 아니라 프로토타입 체인으로부터 상속받은 속성도 반복한다.
+```js
+const obj = { a: 1, b: 2, c: 3 };
+for (let key in obj) {
+    console.log(key);  // a, b, c를 순서대로 출력
+}
+```
+`for of`문 은 반복 가능한(iterable) 객체의 요소를 반복할때 사용한다.<br>(배열, 문자열, Set, Map)
+```js
+const arr = [1, 2, 3];
+for (let value of arr) {
+    console.log(value);  // 1, 2, 3을 순서대로 출력
+}
+
+const str = "hello";
+for (let char of str) {
+    console.log(char);  // h, e, l, l, o를 순서대로 출력
+}
 ```

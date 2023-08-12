@@ -143,11 +143,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 연산자 저장
     calState.operator = opString;
-    const result = document.getElementById("result").innerText;
+    const result = document.getElementById("result");
 
     // 연산자를 연속으로 입력 시 마지막 연산자만 유효
-    result.innerText =
-      (calState.checkOperator) ? (result.slice(0, -1) + opString) : (result += opString); // 뷰
+    if(calState.checkOperator) { // 뷰
+      result.innerText = result.innerText.slice(0, -1) + opString;
+    } else {
+      result.innerText += opString;
+    }
 
     calState.checkOperator = true;
   }
@@ -203,7 +206,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 계산 결과
     const calResult = calculateNum(calState.preNum, calState.operator, calState.nextNum); // ex) 3 + 6
 
-    if (isNaN(calResult) || !calResult) {
+    // inNaN함수는 항상 Number.isNaN으로 사용해야 함, isNaN은 잘못된 결과가 나온다
+    if (Number.isNaN(calResult)) {
       stateClear();
       alert('계산식이 올바르지 않습니다.');
       return;
@@ -270,10 +274,10 @@ document.addEventListener("DOMContentLoaded", () => {
         result = Number(numStringA) + Number(numStringB);
         break;
     }
-    return parseFloat(result.toFixed(2));
+    return parseFloat(result.toFixed(2)); // 결과는 숫자이거나 NaN
   }
 
-
+ 
 
   /**
    * 마지막 입력 취소
@@ -386,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("history_list").innerHTML = "";
 
     const localSession = myHistory.prekey + myHistory.localSessionNum;
-    const res = await fetchData(`https://2597-211-197-126-176.ngrok-free.app/cal?username=${localSession}`, "GET", null);
+    const res = await fetchData(`https://5efa-220-77-145-235.ngrok-free.app/cal?username=${localSession}`, "GET", null);
 
     // 조건문 안의 null, 0, "", undefined -> false
     if (res) {
@@ -450,7 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 페이지 첫 방문 시 세션 생성
     if (myHistory.localSessionNum === 0) {
-      const res = await fetchData("https://2597-211-197-126-176.ngrok-free.app/user", "GET", null)
+      const res = await fetchData("https://5efa-220-77-145-235.ngrok-free.app/user", "GET", null)
       myHistory.localSessionNum = res.length + 1;
       localStorage.setItem(myHistory.prekey + (res.length + 1), res.length + 1);
       alert('첫 방문을 환영합니다 !!');
@@ -460,7 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
         password: 1234,
       };
       // 신규 세션 등록
-      await fetchData("https://2597-211-197-126-176.ngrok-free.app/user", "POST", data);
+      await fetchData("https://5efa-220-77-145-235.ngrok-free.app/user", "POST", data);
       showHistory();
     }
   })();
@@ -481,7 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
       data: `${numA} ${op} ${numB} = ${result}`,
     };
 
-    fetchData("https://2597-211-197-126-176.ngrok-free.app/cal", "POST", data)
+    fetchData("https://5efa-220-77-145-235.ngrok-free.app/cal", "POST", data)
       .then((res) => {
         updatetHistory(res);
       })
@@ -494,7 +498,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function deleteHistory() {
     const username = myHistory.prekey + myHistory.localSessionNum;
-    fetchData(`https://2597-211-197-126-176.ngrok-free.app/cal?username=${username}`, "DELETE", null);
+    fetchData(`https://5efa-220-77-145-235.ngrok-free.app/cal?username=${username}`, "DELETE", null);
     document.getElementById("history_list").innerHTML = "";
   }
 
